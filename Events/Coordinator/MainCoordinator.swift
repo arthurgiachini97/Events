@@ -21,7 +21,8 @@ class MainCoordinator {
     }
     
     func goToEventsList() {
-        let vc = EventsListViewController()
+        let viewModel = EventsListViewModel()
+        let vc = EventsListViewController(viewModel: viewModel)
         vc.coordinator = self
         navigationController.pushViewController(vc, animated: true)
     }
