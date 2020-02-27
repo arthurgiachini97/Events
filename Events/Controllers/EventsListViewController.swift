@@ -44,8 +44,6 @@ class EventsListViewController: UIViewController {
             .events
             .subscribe(onNext: { (events) in
                 print(events)
-            }, onError: { (error) in
-                print(error)
             })
             .disposed(by: disposeBag)
     }
