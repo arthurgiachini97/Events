@@ -46,13 +46,6 @@ class EventsListViewController: UIViewController {
             .observeOn(MainScheduler.instance)
             .bind(to: customView.eventsTableView.rx.items(cellIdentifier: EventTableViewCell.description(), cellType: EventTableViewCell.self)) { (row, event, cell) in
                 cell.event = event
-                AF.request(event.image).responseData(queue: .main) { (response) in
-                    if response.error == nil {
-                        if let responseData = response.data {
-                            cell.eventImageView.image = UIImage(data: responseData)
-                        }
-                    }
-                }
         }
         .disposed(by: disposeBag)
     }

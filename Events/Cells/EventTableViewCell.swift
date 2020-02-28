@@ -7,15 +7,21 @@
 //
 
 import UIKit
+import RxSwift
 
 class EventTableViewCell: UITableViewCell, ViewCoding {
     
     private var viewWidth: CGFloat = 0
     private var viewHeight: CGFloat = 0
     
+    var viewModel = EventCellViewModel()
+    
+    let disposeBag = DisposeBag()
+    
     var event: Event! {
         didSet {
             titleLabel.text = event.title
+            viewModel.fetchEventImage(stringUrl: event.image)
         }
     }
     
@@ -51,6 +57,11 @@ class EventTableViewCell: UITableViewCell, ViewCoding {
         viewHeight = UIScreen.main.bounds.height
         
         setupLayout()
+        
+        self.viewModel.imageDownloaded.subscribe(onNext: { (image) in
+            self.eventImageView.image = image
+        })
+            .disposed(by: disposeBag)
     }
     
     required init?(coder: NSCoder) {
@@ -69,7 +80,6 @@ class EventTableViewCell: UITableViewCell, ViewCoding {
         roundedView.addSubview(titleLabel)
         roundedView.addSubview(eventImageView)
         addSubview(roundedView)
-        
     }
     
     func setupConstraints() {
