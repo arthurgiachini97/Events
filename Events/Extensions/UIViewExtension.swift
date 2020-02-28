@@ -22,7 +22,7 @@ public extension UIView {
     private static let backdropViewTag = 1001
     private static let activityViewTag = 1002
     
-    func lock() {
+    func lock(style: UIActivityIndicatorView.Style) {
         let backdrop = UIView()
         backdrop.backgroundColor = .white
         backdrop.tag = UIView.backdropViewTag
@@ -40,8 +40,8 @@ public extension UIView {
         ])
         
         let activityView = UIActivityIndicatorView()
-        activityView.style = .medium
-        activityView.color = .black
+        activityView.style = style
+        activityView.color = .darkGray
         activityView.tag = UIView.activityViewTag
         activityView.startAnimating()
         
@@ -57,6 +57,14 @@ public extension UIView {
     func unlock() {
         self.viewWithTag(UIView.backdropViewTag)?.removeFromSuperview()
         self.viewWithTag(UIView.activityViewTag)?.removeFromSuperview()
+    }
+    
+    func width(_ width: CGFloat) -> CGFloat {
+        return UIScreen.main.bounds.width * (width/375)
+    }
+    
+    func height(_ height: CGFloat) -> CGFloat {
+        return UIScreen.main.bounds.height * (height/667)
     }
 }
 

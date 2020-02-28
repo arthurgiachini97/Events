@@ -35,12 +35,33 @@ class EventsListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        customView.lock(style: .large)
         viewModel.fetchEvents()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupSuccessState()
+        bindEvents()
+        setupErrorState()
+        setupTryAgainAction()
+    }
+    
+    private func setupSuccessState() {
+        viewModel
+            .events
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { (events) in
+                self.customView.eventsTableView.isHidden = false
+                self.customView.errorLabel.isHidden = true
+                self.customView.tryAgainButton.isHidden = true
+                self.customView.unlock()
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func bindEvents() {
         viewModel
             .events
             .observeOn(MainScheduler.instance)
@@ -50,4 +71,24 @@ class EventsListViewController: UIViewController {
         .disposed(by: disposeBag)
     }
     
+    private func setupErrorState() {
+        viewModel
+            .errorOnEvents
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { (error) in
+                self.customView.eventsTableView.isHidden = true
+                self.customView.errorLabel.isHidden = false
+                self.customView.tryAgainButton.isHidden = false
+                self.customView.unlock()
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func setupTryAgainAction() {
+        customView.tryAgainButton.rx.tap.subscribe { (_) in
+            self.customView.lock(style: .large)
+            self.viewModel.fetchEvents()
+        }
+        .disposed(by: disposeBag)
+    }
 }

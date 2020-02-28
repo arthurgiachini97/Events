@@ -15,6 +15,7 @@ class EventCellViewModel {
     var service: EventCellService!
     
     var imageDownloaded = PublishSubject<UIImage>()
+    var imageFailure = PublishSubject<Error>()
     
     let disposeBag = DisposeBag()
     
@@ -31,7 +32,8 @@ class EventCellViewModel {
                 case .next(let image):
                     self.imageDownloaded.onNext(image)
                     break
-                case .error(_):
+                case .error(let error):
+                    self.imageFailure.onNext(error)
                     break
                 case .completed:
                     break
