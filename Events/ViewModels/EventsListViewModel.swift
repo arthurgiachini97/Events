@@ -8,12 +8,15 @@
 
 import RxSwift
 import RxCocoa
+import UIKit
 
 class EventsListViewModel {
     
     var service: EventsListService!
     
     var events = PublishSubject<[Event]>()
+    
+    var eventImage = PublishSubject<UIImage>()
     
     let disposeBag = DisposeBag()
     
@@ -24,10 +27,17 @@ class EventsListViewModel {
     func fetchEvents() {
         service
             .fetchEvents()
-            .subscribe(onNext: { (events) in
-                self.events.onNext(events)
-            }, onError: { (error) in
-                self.events.onError(error)
+            .materialize()
+            .subscribe(onNext: { (event) in
+                switch event {
+                case .next(let events):
+                    self.events.onNext(events)
+                    break
+                case .error(_):
+                    break
+                case .completed:
+                    break
+                }
             })
             .disposed(by: disposeBag)
     }

@@ -8,6 +8,7 @@
 
 import Alamofire
 import RxSwift
+import Foundation
 
 class EventsListService {
     func fetchEvents() -> Observable<[Event]> {
