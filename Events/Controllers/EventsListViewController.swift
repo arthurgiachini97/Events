@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import Alamofire
 
 class EventsListViewController: UIViewController {
     
@@ -42,10 +43,18 @@ class EventsListViewController: UIViewController {
         
         viewModel
             .events
-            .subscribe(onNext: { (events) in
-                print(events)
-            })
-            .disposed(by: disposeBag)
+            .observeOn(MainScheduler.instance)
+            .bind(to: customView.eventsTableView.rx.items(cellIdentifier: EventTableViewCell.description(), cellType: EventTableViewCell.self)) { (row, event, cell) in
+                cell.event = event
+                AF.request(event.image).responseData(queue: .main) { (response) in
+                    if response.error == nil {
+                        if let responseData = response.data {
+                            cell.eventImageView.image = UIImage(data: responseData)
+                        }
+                    }
+                }
+        }
+        .disposed(by: disposeBag)
     }
-
+    
 }

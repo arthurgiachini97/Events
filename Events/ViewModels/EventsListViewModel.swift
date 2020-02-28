@@ -8,12 +8,15 @@
 
 import RxSwift
 import RxCocoa
+import UIKit
 
 class EventsListViewModel {
     
     var service: EventsListService!
     
     var events = PublishSubject<[Event]>()
+    
+    var eventImage = PublishSubject<UIImage>()
     
     let disposeBag = DisposeBag()
     
