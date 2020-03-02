@@ -14,7 +14,7 @@ class EventsListViewModel {
     
     var service: EventsListService!
     
-    var events = PublishSubject<[Event]>()
+    var events = BehaviorRelay<[Event]>(value: [])
     var errorOnEvents = PublishSubject<Error>()
     
     var eventImage = PublishSubject<UIImage>()
@@ -32,7 +32,7 @@ class EventsListViewModel {
             .subscribe(onNext: { (event) in
                 switch event {
                 case .next(let events):
-                    self.events.onNext(events)
+                    self.events.accept(events)
                     break
                 case .error(let error):
                     self.errorOnEvents.onNext(error)

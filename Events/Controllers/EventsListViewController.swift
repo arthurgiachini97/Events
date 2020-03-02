@@ -18,6 +18,8 @@ class EventsListViewController: UIViewController {
     
     var viewModel: EventsListViewModel!
     
+    var indexPath: IndexPath!
+    
     let disposeBag = DisposeBag()
     
     init(viewModel: EventsListViewModel) {
@@ -46,6 +48,7 @@ class EventsListViewController: UIViewController {
         bindEvents()
         setupErrorState()
         setupTryAgainAction()
+        eventSelected()
     }
     
     private func setupSuccessState() {
@@ -88,6 +91,13 @@ class EventsListViewController: UIViewController {
         customView.tryAgainButton.rx.tap.subscribe { (_) in
             self.customView.lock(style: .large)
             self.viewModel.fetchEvents()
+        }
+        .disposed(by: disposeBag)
+    }
+    
+    private func eventSelected() {
+        customView.eventsTableView.rx.itemSelected.bind { (indexPath) in
+            self.coordinator?.goToEventDetail(event: self.viewModel.events.value[indexPath.row])
         }
         .disposed(by: disposeBag)
     }
