@@ -19,8 +19,10 @@ class EventsListService {
                         let result = try response.result.get()
                         observer.onNext(result)
                     } catch {
-                        observer.onError(error)
+                        observer.onError(APIClientError.NoData)
                     }
+                } else {
+                    observer.onError(APIClientError.CouldNotDecodeJSON)
                 }
             }
             return Disposables.create()

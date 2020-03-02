@@ -15,6 +15,7 @@ class EventsListViewModel {
     var service: EventsListService!
     
     var events = PublishSubject<[Event]>()
+    var errorOnEvents = PublishSubject<Error>()
     
     var eventImage = PublishSubject<UIImage>()
     
@@ -33,7 +34,8 @@ class EventsListViewModel {
                 case .next(let events):
                     self.events.onNext(events)
                     break
-                case .error(_):
+                case .error(let error):
+                    self.errorOnEvents.onNext(error)
                     break
                 case .completed:
                     break
