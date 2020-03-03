@@ -13,12 +13,15 @@ class PersonCollectionViewCell: UICollectionViewCell, ViewCoding {
     var nameLabel: UILabel = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.numberOfLines = 0
+        $0.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         return $0
     }(UILabel())
     
     var pictureImageView: UIImageView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = .red
+        $0.backgroundColor = .lightGray
+        $0.layer.masksToBounds = false
+        $0.layer.cornerRadius = 10
         return $0
     }(UIImageView())
     
@@ -38,6 +41,8 @@ class PersonCollectionViewCell: UICollectionViewCell, ViewCoding {
     }
     
     private func setupLayout() {
+        layer.masksToBounds = false
+        layer.cornerRadius = 10
         addSubviews()
         setupConstraints()
     }
@@ -59,7 +64,7 @@ class PersonCollectionViewCell: UICollectionViewCell, ViewCoding {
             // Name Label
             nameLabel.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor),
             nameLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            nameLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: height(-6))
+            nameLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: height(-10))
         ])
     }
     
