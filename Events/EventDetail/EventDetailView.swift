@@ -79,6 +79,7 @@ class EventDetailView: UIView, ViewCoding {
         $0.textColor = .white
         $0.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         $0.textAlignment = .center
+        $0.numberOfLines = 0
         return $0
     }(UILabel())
     
@@ -125,6 +126,7 @@ class EventDetailView: UIView, ViewCoding {
         registerAndSetupPeopleCollectionView()
         setTextFieldsDelegate()
         hideKeyboardWhenTappedAround()
+        setKeyBoardBehaviour()
     }
     
     func addSubviews() {
@@ -201,7 +203,7 @@ class EventDetailView: UIView, ViewCoding {
             checkinView.topAnchor.constraint(equalTo: peopleCollectionView.bottomAnchor, constant: height(16)),
             checkinView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.3),
             checkinView.widthAnchor.constraint(equalTo: contentView.widthAnchor),
-            checkinView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -30),
+            checkinView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor),
             
             // CheckIn Title Label
             checkinTitleLabel.topAnchor.constraint(equalTo: checkinView.topAnchor, constant: height(16)),
@@ -250,8 +252,28 @@ extension EventDetailView: UITextFieldDelegate {
         return false
     }
     
-    func setTextFieldsDelegate() {
+    private func setTextFieldsDelegate() {
         checkinNameTextField.delegate = self
         checkinEmailTextField.delegate = self
+    }
+    
+    private func setKeyBoardBehaviour() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        hideKeyboardWhenTappedAround()
+    }
+    
+    @objc private func keyboardWillShow(notification: NSNotification) {
+        let userInfo = notification.userInfo ?? [:]
+        if let keyboardFrame = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            let margin: CGFloat = 60
+            scrollView.contentInset.bottom = keyboardFrame.height + margin
+            scrollView.verticalScrollIndicatorInsets.bottom = keyboardFrame.height + margin
+        }
+    }
+    
+    @objc private func keyboardWillHide(notification: NSNotification) {
+        scrollView.contentInset.bottom = 0
+        scrollView.verticalScrollIndicatorInsets.bottom = 0
     }
 }
