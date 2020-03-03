@@ -26,4 +26,11 @@ class MainCoordinator {
         vc.coordinator = self
         navigationController.pushViewController(vc, animated: true)
     }
+    
+    func goToEventDetail(event: Event) {
+        let viewModel = EventDetailViewModel(event: event)
+        let vc = EventDetailViewController(viewModel: viewModel)
+        vc.coordinator = self
+        navigationController.pushViewController(vc, animated: true)
+    }
 }
