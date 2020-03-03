@@ -28,18 +28,10 @@ class EventsListViewModel {
     func fetchEvents() {
         service
             .fetchEvents()
-            .materialize()
-            .subscribe(onNext: { (event) in
-                switch event {
-                case .next(let events):
-                    self.events.accept(events)
-                    break
-                case .error(let error):
-                    self.errorOnEvents.onNext(error)
-                    break
-                case .completed:
-                    break
-                }
+            .subscribe(onNext: { (events) in
+                self.events.accept(events)
+            }, onError: { (error) in
+                self.errorOnEvents.onNext(error)
             })
             .disposed(by: disposeBag)
     }

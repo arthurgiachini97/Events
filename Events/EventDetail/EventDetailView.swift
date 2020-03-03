@@ -123,6 +123,8 @@ class EventDetailView: UIView, ViewCoding {
         addSubviews()
         setupConstraints()
         registerAndSetupPeopleCollectionView()
+        setTextFieldsDelegate()
+        hideKeyboardWhenTappedAround()
     }
     
     func addSubviews() {
@@ -234,5 +236,22 @@ class EventDetailView: UIView, ViewCoding {
         flowLayout.sectionInset = UIEdgeInsets(top: 0, left: width(16), bottom: 0, right: width(16))
         flowLayout.scrollDirection = .horizontal
         peopleCollectionView.collectionViewLayout = flowLayout
+    }
+}
+
+extension EventDetailView: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == checkinNameTextField {
+            checkinEmailTextField.becomeFirstResponder()
+        } else {
+            endEditing(true)
+        }
+        return false
+    }
+    
+    func setTextFieldsDelegate() {
+        checkinNameTextField.delegate = self
+        checkinEmailTextField.delegate = self
     }
 }

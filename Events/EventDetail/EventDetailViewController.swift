@@ -35,6 +35,7 @@ class EventDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         bindEvent()
+        doCheckIn()
     }
     
     private func bindEvent() {
@@ -58,7 +59,6 @@ class EventDetailViewController: UIViewController {
             .bind(to: customView.descriptionLabel.rx.text)
             .disposed(by: disposeBag)
         
-        print( "people:\(viewModel.people.value)")
         viewModel
             .people
             .observeOn(MainScheduler.instance)
@@ -69,5 +69,38 @@ class EventDetailViewController: UIViewController {
                     cell.person = person
         }
         .disposed(by: disposeBag)
+    }
+    
+    private func doCheckIn() {
+        
+        customView.checkinButton.rx.tap.subscribe { (_) in
+            self.customView.lock(style: .large)
+            let name = self.customView.checkinNameTextField.text
+            let email = self.customView.checkinEmailTextField.text
+            let verified = self.viewModel.verifyUserInfo(name: name, email: email)
+            if verified {
+                self.viewModel.postCheckIn(checkIn: CheckIn(eventId: "", name: name!, email: email!))
+            } else {
+                self.customView.unlock()
+                self.present(UIAlertController.simpleAlert(title: "Ops!", message: "Por favor preencha os dois campos para realizar o Check In", buttonTitle: "OK"), animated: true)
+            }
+        }
+        .disposed(by: disposeBag)
+        
+        viewModel
+            .successCheckIn
+            .subscribe(onNext: { (success) in
+                self.customView.unlock()
+                self.present(UIAlertController.simpleAlert(title: "Sucesso!", message: "Seu Check In foi realizado com successo!", buttonTitle: "Eba!"), animated: true)
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel
+            .errorCheckIn
+            .subscribe(onNext: { (failure) in
+                self.customView.unlock()
+                self.present(UIAlertController.simpleAlert(title: "Erro!", message: "Não foi possível realizar seu Check In.", buttonTitle: "Ok"), animated: true)
+            })
+            .disposed(by: disposeBag)
     }
 }

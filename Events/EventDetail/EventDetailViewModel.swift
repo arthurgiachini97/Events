@@ -13,15 +13,21 @@ import RxCocoa
 
 class EventDetailViewModel {
     
+    var service: EventDetailService!
+    
     var event = BehaviorSubject<Event?>(value: nil)
     var eventImage = BehaviorSubject<UIImage?>(value: nil)
     var people = BehaviorRelay<[Person]>(value: [])
     
+    var successCheckIn = PublishSubject<Bool>()
+    var errorCheckIn = PublishSubject<Bool>()
+    
     let disposeBag = DisposeBag()
     
-    init(event: Event, eventImage: UIImage?) {
+    init(event: Event, eventImage: UIImage?, service: EventDetailService = EventDetailService()) {
         self.event.onNext(event)
         self.eventImage.onNext(eventImage)
+        self.service = service
         bindPeople()
     }
     
@@ -38,10 +44,28 @@ class EventDetailViewModel {
     }
     
     private func bindPeople() {
-//        people.accept([Person(id: "1", eventId: "1", name: "tuy", picture: "")])
         event
             .map({($0?.people)!})
             .bind(to: people)
             .disposed(by: disposeBag)
+    }
+    
+    func postCheckIn(checkIn: CheckIn) {
+        service
+            .postCheckIn(checkIn: checkIn)
+            .subscribe(onNext: { (_) in
+                self.successCheckIn.onNext(true)
+            }, onError: { (_) in
+                self.successCheckIn.onNext(false)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func verifyUserInfo(name: String?, email: String?) -> Bool {
+        if name != "" && email != "" {
+            return true
+        } else {
+            return false
+        }
     }
 }
