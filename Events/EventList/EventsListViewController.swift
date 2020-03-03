@@ -97,7 +97,8 @@ class EventsListViewController: UIViewController {
     
     private func eventSelected() {
         customView.eventsTableView.rx.itemSelected.bind { (indexPath) in
-            self.coordinator?.goToEventDetail(event: self.viewModel.events.value[indexPath.row])
+            let cell = self.customView.eventsTableView.cellForRow(at: indexPath) as! EventTableViewCell
+            self.coordinator?.goToEventDetail(event: self.viewModel.events.value[indexPath.row], eventImage: cell.eventImageView.image)
         }
         .disposed(by: disposeBag)
     }
