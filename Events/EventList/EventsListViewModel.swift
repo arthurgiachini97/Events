@@ -12,20 +12,27 @@ import UIKit
 
 class EventsListViewModel {
     
-    var service: EventsListService!
+    var service: EventsListServiceProtocol!
     
-    var events = BehaviorRelay<[Event]>(value: [])
+    var events = BehaviorRelay<[EventModel]>(value: [])
     var errorOnEvents = PublishSubject<Error>()
     
     var eventImage = PublishSubject<UIImage>()
     
     let disposeBag = DisposeBag()
     
-    init(service: EventsListService = EventsListService()) {
+    init(service: EventsListServiceProtocol = EventsListService()) {
         self.service = service
     }
-    
-    func fetchEvents() {
+
+    func input(load: Observable<Void>) {
+        load.subscribe(onNext: { [weak self] in
+            self?.fetchEvents()
+        }).disposed(by: disposeBag)
+    }
+
+    private func fetchEvents() {
+        
         service
             .fetchEvents()
             .subscribe(onNext: { (events) in

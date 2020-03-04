@@ -15,7 +15,7 @@ class EventDetailViewModel {
     
     var service: EventDetailService!
     
-    var event = BehaviorSubject<Event?>(value: nil)
+    var event = BehaviorSubject<EventModel?>(value: nil)
     var eventImage = BehaviorSubject<UIImage?>(value: nil)
     var people = BehaviorRelay<[Person]>(value: [])
     
@@ -24,7 +24,7 @@ class EventDetailViewModel {
     
     let disposeBag = DisposeBag()
     
-    init(event: Event, eventImage: UIImage?, service: EventDetailService = EventDetailService()) {
+    init(event: EventModel, eventImage: UIImage?, service: EventDetailService = EventDetailService()) {
         self.event.onNext(event)
         self.eventImage.onNext(eventImage)
         self.service = service
@@ -41,6 +41,15 @@ class EventDetailViewModel {
     
     func mapDescription() -> Observable<String?> {
         return event.map({$0?.description})
+    }
+    
+    func mapLocation() -> Observable<CLLocationCoordinate2D?> {
+        return event.map({
+            guard let latitude = $0?.latitude, let longitude = $0?.longitude else {
+                return nil
+            }
+            return CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude))
+        })
     }
     
     private func bindPeople() {

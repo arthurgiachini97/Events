@@ -27,7 +27,7 @@ class MainCoordinator {
         navigationController.pushViewController(vc, animated: true)
     }
     
-    func goToEventDetail(event: Event, eventImage: UIImage?) {
+    func goToEventDetail(event: EventModel, eventImage: UIImage?) {
         let viewModel = EventDetailViewModel(event: event, eventImage: eventImage)
         let vc = EventDetailViewController(viewModel: viewModel)
         vc.coordinator = self
