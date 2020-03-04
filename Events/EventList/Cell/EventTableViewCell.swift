@@ -37,6 +37,7 @@ class EventTableViewCell: UITableViewCell, ViewCoding {
     var titleLabel: UILabel = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.numberOfLines = 0
+        $0.font = UIFont.systemFont(ofSize: 18, weight: .regular)
         return $0
     }(UILabel())
     
