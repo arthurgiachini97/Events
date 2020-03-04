@@ -48,6 +48,15 @@ class EventDetailView: UIView, ViewCoding {
         return $0
     }(UILabel())
     
+    let dateLabel: UILabel = {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        let underlineAttribute = [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue]
+        let underlineAttributedString = NSAttributedString(string: "StringWithUnderLine", attributes: underlineAttribute)
+        $0.attributedText = underlineAttributedString
+        return $0
+    }(UILabel())
+    
     let mapView: MKMapView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         return $0
@@ -56,7 +65,7 @@ class EventDetailView: UIView, ViewCoding {
     let collectionViewTitleLabel: UILabel = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.text = "Pessoas"
-        $0.font = UIFont.systemFont(ofSize: 24, weight: .semibold)
+        $0.font = UIFont.systemFont(ofSize: 26, weight: .semibold)
         return $0
     }(UILabel())
     
@@ -135,6 +144,7 @@ class EventDetailView: UIView, ViewCoding {
         contentView.addSubview(titleLabel)
         contentView.addSubview(eventImage)
         contentView.addSubview(priceLabel)
+        contentView.addSubview(dateLabel)
         contentView.addSubview(descriptionLabel)
         contentView.addSubview(mapView)
         contentView.addSubview(collectionViewTitleLabel)
@@ -178,10 +188,15 @@ class EventDetailView: UIView, ViewCoding {
             priceLabel.trailingAnchor.constraint(equalTo: eventImage.trailingAnchor, constant: width(-16)),
             priceLabel.leadingAnchor.constraint(greaterThanOrEqualTo: titleLabel.trailingAnchor, constant: width(8)),
             
+            // Date Label
+            dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: height(32)),
+            dateLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            dateLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            
             // Description Label
             descriptionLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             descriptionLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: height(24)),
+            descriptionLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: height(24)),
             
             // Map View
             mapView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: height(20)),
@@ -197,11 +212,11 @@ class EventDetailView: UIView, ViewCoding {
             peopleCollectionView.topAnchor.constraint(equalTo: collectionViewTitleLabel.bottomAnchor, constant: height(8)),
             peopleCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             peopleCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            peopleCollectionView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.12),
+            peopleCollectionView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.15),
             
-            // Post View
+            // Check In View
             checkinView.topAnchor.constraint(equalTo: peopleCollectionView.bottomAnchor, constant: height(16)),
-            checkinView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.3),
+//            checkinView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.35),
             checkinView.widthAnchor.constraint(equalTo: contentView.widthAnchor),
             checkinView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor),
             
@@ -214,19 +229,20 @@ class EventDetailView: UIView, ViewCoding {
             checkinNameTextField.leadingAnchor.constraint(equalTo: checkinTitleLabel.leadingAnchor),
             checkinNameTextField.centerXAnchor.constraint(equalTo: checkinView.centerXAnchor),
             checkinNameTextField.topAnchor.constraint(equalTo: checkinTitleLabel.bottomAnchor, constant: height(16)),
-            checkinNameTextField.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.04),
+            checkinNameTextField.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.052),
             
             // CheckIn Email Text Field
             checkinEmailTextField.leadingAnchor.constraint(equalTo: checkinTitleLabel.leadingAnchor),
             checkinEmailTextField.centerXAnchor.constraint(equalTo: checkinView.centerXAnchor),
             checkinEmailTextField.topAnchor.constraint(equalTo: checkinNameTextField.bottomAnchor, constant: height(16)),
-            checkinEmailTextField.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.04),
+            checkinEmailTextField.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.052),
             
             // CheckIn Button
             checkinButton.topAnchor.constraint(equalTo: checkinEmailTextField.bottomAnchor, constant: height(18)),
             checkinButton.leadingAnchor.constraint(equalTo: checkinView.leadingAnchor, constant: width(50)),
             checkinButton.centerXAnchor.constraint(equalTo: checkinView.centerXAnchor),
-            checkinButton.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.05)
+            checkinButton.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.06),
+            checkinButton.bottomAnchor.constraint(equalTo: checkinView.bottomAnchor, constant: height(-18))
         ])
     }
     
@@ -234,7 +250,7 @@ class EventDetailView: UIView, ViewCoding {
         peopleCollectionView.register(PersonCollectionViewCell.self, forCellWithReuseIdentifier: PersonCollectionViewCell.description())
         
         let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.itemSize = CGSize(width: height(60), height: height(60))
+        flowLayout.itemSize = CGSize(width: height(80), height: height(80))
         flowLayout.sectionInset = UIEdgeInsets(top: 0, left: width(16), bottom: 0, right: width(16))
         flowLayout.scrollDirection = .horizontal
         peopleCollectionView.collectionViewLayout = flowLayout

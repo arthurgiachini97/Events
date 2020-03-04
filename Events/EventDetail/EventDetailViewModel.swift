@@ -52,6 +52,18 @@ class EventDetailViewModel {
         })
     }
     
+    func mapDate() -> Observable<String?> {
+        return event.map({
+            guard let dateInt = $0?.date else {
+                return nil
+            }
+            let date = Date(timeIntervalSince1970: TimeInterval(dateInt/1000))
+            let formatter = DateFormatter()
+            formatter.dateFormat = "dd/MM/yyyy"
+            return "Data: \(formatter.string(from: date))"
+        })
+    }
+    
     private func bindPeople() {
         event
             .map({($0?.people)!})

@@ -37,13 +37,14 @@ class EventsListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.navigationBar.prefersLargeTitles = true
         customView.lock(style: .large)
         reload.onNext(())
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        title = "Eventos"
         setupSuccessState()
         bindEvents()
         setupErrorState()

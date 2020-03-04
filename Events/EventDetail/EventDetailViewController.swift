@@ -30,6 +30,11 @@ class EventDetailViewController: UIViewController {
         view = customView
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationItem.largeTitleDisplayMode = .never
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         bindEvent()
@@ -45,6 +50,11 @@ class EventDetailViewController: UIViewController {
         viewModel
             .eventImage
             .bind(to: customView.eventImage.rx.image)
+            .disposed(by: disposeBag)
+        
+        viewModel
+            .mapDate()
+            .bind(to: customView.dateLabel.rx.text)
             .disposed(by: disposeBag)
         
         viewModel
