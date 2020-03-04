@@ -8,27 +8,51 @@
 
 import XCTest
 @testable import Events
+import RxSwift
 
 class EventsTests: XCTestCase {
 
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    let disposeBag = DisposeBag()
+    
+    func testConnectionError() {
+        
+        let serviceMock = MockEventsListServiceConnectionError()
+        let viewModel = EventsListViewModel(service: serviceMock)
+        viewModel.errorOnEvents.subscribe(onError: { error in
+            if case APIClientError.NoConnection = error {
+                XCTAssert(true)
+            } else {
+                XCTAssert(false)
+            }
+        })
+            .disposed(by: disposeBag)
     }
-
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    
+    func testDecodeError() {
+        
+        let serviceMock = MockEventsListServiceDecodeError()
+        let viewModel = EventsListViewModel(service: serviceMock)
+        viewModel.errorOnEvents.subscribe(onError: { error in
+            if case APIClientError.CouldNotDecodeJSON = error {
+                XCTAssert(true)
+            } else {
+                XCTAssert(false)
+            }
+        })
+            .disposed(by: disposeBag)
     }
-
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    
+    func testEventsList() {
+        let serviceMock = MockEventsListService()
+        let viewModel = EventsListViewModel(service: serviceMock)
+        viewModel.events.subscribe(onNext: { events in
+            if !events.isEmpty {
+                XCTAssert(true)
+            } else {
+                XCTAssert(false)
+            }
+        })
+            .disposed(by: disposeBag)
     }
-
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
 }
+
