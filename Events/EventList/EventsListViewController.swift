@@ -12,8 +12,6 @@ import Alamofire
 
 class EventsListViewController: UIViewController {
     
-    var coordinator: MainCoordinator?
-    
     let customView = EventsListView()
     
     let viewModel: EventsListViewModel
@@ -64,12 +62,6 @@ class EventsListViewController: UIViewController {
                 self.customView.errorLabel.isHidden = true
                 self.customView.tryAgainButton.isHidden = true
                 self.customView.unlock()
-                
-//                self.customView.eventsTableView.rx.itemSelected.bind { indexPath in
-//                    let cell = self.customView.eventsTableView.cellForRow(at: indexPath) as! EventTableViewCell
-//                    self.coordinator?.goToEventDetail(event: self.viewModel.events.value[indexPath.row], eventImage: cell.eventImageView.image)
-//                }
-//                    .disposed(by: self.disposeBag)
             })
             .disposed(by: disposeBag)
     }
@@ -107,26 +99,11 @@ class EventsListViewController: UIViewController {
         .disposed(by: disposeBag)
     }
     
-    private func eventSelected() {
-//        customView.eventsTableView.rx.itemSelected.bind { indexPath in
-//            let item = self.viewModel.events.com
-//
-//        }
-//
-//        customView.eventsTableView.rx.itemSelected.withLatestFrom(viewModel.events).sub
-//            let indexObservable = self.customView.eventsTableView.rx.itemSelected.asObservable()
-//            Observable.combineLatest(
-//                indexObservable, self.viewModel.events,
-//                resultSelector: { indexPath, events in
-//                    let cell = self.customView.eventsTableView.cellForRow(at: indexPath) as! EventTableViewCell
-//                    self.coordinator?.goToEventDetail(event: events[indexPath.row], eventImage: cell.eventImageView.image)
-//            }).observeOn(MainScheduler.instance)
-//                .subscribe()
-//                .disposed(by: self.disposeBag)
-        
+    private func eventSelected() {        
         customView.eventsTableView.rx.itemSelected.bind { (indexPath) in
             let cell = self.customView.eventsTableView.cellForRow(at: indexPath) as! EventTableViewCell
-            self.coordinator?.goToEventDetail(event: self.viewModel.events.value[indexPath.row], eventImage: cell.eventImageView.image)
+            let viewModel = EventDetailViewModel(event: self.viewModel.events.value[indexPath.row], eventImage: cell.eventImageView.image)
+            self.viewModel.didSelectedEvent(viewModel: viewModel)
         }
         .disposed(by: disposeBag)
     }

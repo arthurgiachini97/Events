@@ -10,13 +10,11 @@ import UIKit
 import RxSwift
 
 class EventDetailViewController: UIViewController {
-    
-    var coordinator: MainCoordinator?
-    
+
     let customView = EventDetailView()
     
     let viewModel: EventDetailViewModel
-    
+
     let disposeBag = DisposeBag()
     
     init(viewModel: EventDetailViewModel) {

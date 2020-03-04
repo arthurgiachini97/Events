@@ -19,10 +19,14 @@ class EventsListViewModel {
     
     var eventImage = PublishSubject<UIImage>()
     
+    let destiny: PublishSubject<Destiny>
+    
+    
     let disposeBag = DisposeBag()
     
-    init(service: EventsListServiceProtocol = EventsListService()) {
+    init(service: EventsListServiceProtocol = EventsListService(), destiny: PublishSubject<Destiny>) {
         self.service = service
+        self.destiny = destiny
     }
 
     func input(load: Observable<Void>) {
@@ -41,5 +45,9 @@ class EventsListViewModel {
                 self.errorOnEvents.onNext(error)
             })
             .disposed(by: disposeBag)
+    }
+    
+    func didSelectedEvent(viewModel: EventDetailViewModel) {
+        destiny.onNext(.eventDetail(viewModel: viewModel))
     }
 }
