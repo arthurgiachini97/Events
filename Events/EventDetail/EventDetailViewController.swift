@@ -15,13 +15,13 @@ class EventDetailViewController: UIViewController {
     
     let customView = EventDetailView()
     
-    var viewModel: EventDetailViewModel!
+    let viewModel: EventDetailViewModel
     
     let disposeBag = DisposeBag()
     
     init(viewModel: EventDetailViewModel) {
-        super.init(nibName: nil, bundle: nil)
         self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -57,6 +57,15 @@ class EventDetailViewController: UIViewController {
         viewModel
             .mapDescription()
             .bind(to: customView.descriptionLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        viewModel
+            .mapLocation()
+            .subscribe(onNext: { location in
+                if let location = location {
+                    self.customView.setMapViewLocation(location: location)
+                }
+            })
             .disposed(by: disposeBag)
         
         viewModel

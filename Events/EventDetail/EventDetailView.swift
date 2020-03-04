@@ -239,6 +239,15 @@ class EventDetailView: UIView, ViewCoding {
         flowLayout.scrollDirection = .horizontal
         peopleCollectionView.collectionViewLayout = flowLayout
     }
+    
+    func setMapViewLocation(location: CLLocationCoordinate2D) {
+        let mapCamera = MKMapCamera(lookingAtCenter: location, fromEyeCoordinate: location, eyeAltitude: 5000)
+        mapView.setCamera(mapCamera, animated: true)
+        let pointAnnotation = MKPointAnnotation()
+        pointAnnotation.title = "Local do evento"
+        pointAnnotation.coordinate = location
+        mapView.addAnnotation(pointAnnotation)
+    }
 }
 
 extension EventDetailView: UITextFieldDelegate {
