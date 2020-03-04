@@ -132,16 +132,10 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		6228CFD6240840570041002D /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Cells;
-			sourceTree = "<group>";
-		};
 		6228CFD9240844310041002D /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				624103F1240F2006006AC641 /* EventsListServiceProtocol.swift */,
 				6228CFDA240844390041002D /* ViewCoding.swift */,
 			);
 			path = Protocols;
@@ -181,7 +175,6 @@
 				6262EE22240DBA77007B270E /* EventDetail */,
 				6228CFDF240990C20041002D /* Extensions */,
 				6228CFD9240844310041002D /* Protocols */,
-				6228CFD6240840570041002D /* Cells */,
 				62282C0323FC988D0027D533 /* Models */,
 				62282C0023FC95B30027D533 /* ViewModels */,
 				62282BFD23FC92C10027D533 /* Service */,
@@ -248,7 +241,6 @@
 				62BDBBD523FCCF78008E91F4 /* EventsListViewModel.swift */,
 				62BDBBCA23FCA026008E91F4 /* EventsListService.swift */,
 				6260B9F423FC866F00361ABD /* EventsListViewController.swift */,
-				624103F1240F2006006AC641 /* EventsListServiceProtocol.swift */,
 				6262EE24240DBAAB007B270E /* Cell */,
 			);
 			path = EventList;
