@@ -15,7 +15,7 @@ class EventTableViewCell: UITableViewCell, ViewCoding {
     
     let disposeBag = DisposeBag()
     
-    var event: Event! {
+    var event: EventModel! {
         didSet {
             titleLabel.text = event.title
             viewModel.fetchEventImage(stringUrl: event.image)

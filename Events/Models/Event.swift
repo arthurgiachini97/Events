@@ -6,7 +6,7 @@
 //  Copyright © 2020 arthur.giachini. All rights reserved.
 //
 
-struct Event: Codable {
+struct EventModel: Codable {
     var people: [Person]?
     var date: Int
     var description: String

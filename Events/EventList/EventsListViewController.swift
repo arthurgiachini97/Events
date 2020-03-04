@@ -12,19 +12,19 @@ import Alamofire
 
 class EventsListViewController: UIViewController {
     
-    var coordinator: MainCoordinator?
-    
     let customView = EventsListView()
     
-    var viewModel: EventsListViewModel!
+    let viewModel: EventsListViewModel
     
     var indexPath: IndexPath!
     
     let disposeBag = DisposeBag()
     
+    let reload = PublishSubject<Void>()
+    
     init(viewModel: EventsListViewModel) {
-        super.init(nibName: nil, bundle: nil)
         self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -38,7 +38,7 @@ class EventsListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         customView.lock(style: .large)
-        viewModel.fetchEvents()
+        reload.onNext(())
     }
     
     override func viewDidLoad() {
@@ -49,6 +49,8 @@ class EventsListViewController: UIViewController {
         setupErrorState()
         setupTryAgainAction()
         eventSelected()
+
+        viewModel.input(load: reload)
     }
     
     private func setupSuccessState() {
@@ -72,6 +74,8 @@ class EventsListViewController: UIViewController {
                 cell.event = event
         }
         .disposed(by: disposeBag)
+        
+        
     }
     
     private func setupErrorState() {
@@ -90,14 +94,16 @@ class EventsListViewController: UIViewController {
     private func setupTryAgainAction() {
         customView.tryAgainButton.rx.tap.subscribe { (_) in
             self.customView.lock(style: .large)
-            self.viewModel.fetchEvents()
+            self.reload.onNext(())
         }
         .disposed(by: disposeBag)
     }
     
-    private func eventSelected() {
+    private func eventSelected() {        
         customView.eventsTableView.rx.itemSelected.bind { (indexPath) in
-            self.coordinator?.goToEventDetail(event: self.viewModel.events.value[indexPath.row])
+            let cell = self.customView.eventsTableView.cellForRow(at: indexPath) as! EventTableViewCell
+            let viewModel = EventDetailViewModel(event: self.viewModel.events.value[indexPath.row], eventImage: cell.eventImageView.image)
+            self.viewModel.didSelectedEvent(viewModel: viewModel)
         }
         .disposed(by: disposeBag)
     }

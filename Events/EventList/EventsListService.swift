@@ -10,10 +10,10 @@ import Alamofire
 import RxSwift
 import Foundation
 
-class EventsListService {
-    func fetchEvents() -> Observable<[Event]> {
+class EventsListService: EventsListServiceProtocol {
+    func fetchEvents() -> Observable<[EventModel]> {
         return Observable.create { (observer) -> Disposable in
-            AF.request("https://5b840ba5db24a100142dcd8c.mockapi.io/api/events").validate().responseDecodable(of: [Event].self) { (response) in
+            AF.request("https://5b840ba5db24a100142dcd8c.mockapi.io/api/events").validate().responseDecodable(of: [EventModel].self) { (response) in
                 if response.error == nil {
                     do {
                         let result = try response.result.get()

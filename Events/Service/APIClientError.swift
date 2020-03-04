@@ -9,4 +9,5 @@
 enum APIClientError: Error {
     case NoData
     case CouldNotDecodeJSON
+    case NoConnection
 }
